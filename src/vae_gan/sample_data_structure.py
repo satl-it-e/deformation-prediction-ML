@@ -1,11 +1,18 @@
 import math
 import glob
 import pandas as pd
+import numpy as np
 import json
 
+
+GLOBAL_REL_PATH_TO_DATA = "../../data"
+
+
 def get_surface_nodes(file_ids=(1,385)):
+    print(file_ids)
     X_nodes = []
-    sample_filenames = glob.glob('./data/sample_model/model/*.json')
+    sample_filenames = glob.glob(GLOBAL_REL_PATH_TO_DATA + '/raw/sample_model/model/*.json')
+    print(sample_filenames)
     for sample_filename in sample_filenames[:len(file_ids)]:
         with open(sample_filename, 'r') as file:
             data = json.load(file)
@@ -27,8 +34,7 @@ def get_voxel_shapes_from_nodes_dicts(surface_nodes):
 
 def get_conditions(file_ids=range(1,385)):
     X_conditions = []
-    filenames = glob.glob('cleared_data/pre_*.csv')
-
+    filenames = glob.glob(GLOBAL_REL_PATH_TO_DATA + '/preprocessed/pre_*.csv')
     for filename in filenames[:len(file_ids)]:
         x_cond = dict()
         df = pd.read_csv(filename)
@@ -43,7 +49,7 @@ def get_conditions(file_ids=range(1,385)):
 
 def get_surface_nodes_dispositions(file_ids=(1,385)):
     GT_disps = []  # ground truth
-    filenames = glob.glob('data/sample_gt/gt/*.csv')
+    filenames = glob.glob(GLOBAL_REL_PATH_TO_DATA + '/raw/sample_gt/gt/*.csv')
     for i, filename in enumerate(filenames[:len(file_ids)]):
         df = pd.read_csv(filename)
         surface_nodes_dispositions = {row['node_id']:(row['dx'], row['dy'], row['dz']) for (index, row) in df.iterrows()}
